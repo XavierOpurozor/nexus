@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NXH Nexus</title>
+    <link rel="icon" type="image/png" href="Nxh Favicon.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom CSS for a vibrant, tech-inspired theme and animations */
+        :root {
+            --primary-bg: #FFFFFF; /* White */
+            --secondary-bg: #F0F0F0; /* Light Gray */
+            --accent-color: #008080; /* Teal-ish Cyan */
+            --text-color: #333333; /* Dark Gray */
+            --nav-hover-color: #006666; /* Darker Teal */
+        }
+        
+        body {
+            font-family: 'Roboto Mono', monospace;
+            background-color: var(--primary-bg);
+            color: var(--text-color);
+        }
+
+        /* Custom scrollbar for a cleaner look */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background-color: var(--accent-color);
+            border-radius: 4px;
+        }
+
+        /* Animation for content fade-in */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        /* Pulse animation for the logo */
+        @keyframes pulse {
+            0%, 100% { filter: drop-shadow(0 0 2px var(--accent-color)); }
+            50% { filter: drop-shadow(0 0 5px var(--accent-color)); }
+        }
+
+        /* Custom styles for the main content container */
+        #content-container {
+            width: 100%;
+            height: 80vh;
+            border-radius: 1rem;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 128, 128, 0.2);
+            background-color: var(--secondary-bg);
+            border: 2px solid var(--accent-color);
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out, height 0.5s ease;
+        }
+
+        #content-container.expanded {
+            height: 95vh;
+            box-shadow: 0 0 20px rgba(0, 128, 128, 0.4);
+        }
+
+        #content-container:hover {
+            transform: scale(1.005);
+            box-shadow: 0 0 20px rgba(0, 128, 128, 0.4);
+        }
+        
+        #main-iframe {
+            width: 100%;
+            height: 100%;
+        }
+
+        .nav-link.active {
+            color: var(--nav-hover-color);
+            text-shadow: 0 0 4px var(--nav-hover-color);
+        }
+        
+        .sub-brand-card {
+            background-color: var(--secondary-bg);
+            border: 1px solid var(--accent-color);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            cursor: pointer;
+        }
+
+        .sub-brand-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 128, 128, 0.2);
+        }
+
+        /* Styles for the scroll-to-top button and expand button */
+        #scroll-to-top-btn, #expand-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 99;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            background-color: var(--accent-color);
+            color: var(--primary-bg);
+            border: none;
+            border-radius: 50%;
+            display: none; /* Initially hidden */
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            line-height: 1;
+            box-shadow: 0 4px 12px rgba(0, 128, 128, 0.2);
+            transition: all 0.3s ease-in-out;
+        }
+
+        #scroll-to-top-btn:hover, #expand-btn:hover {
+            background-color: var(--nav-hover-color);
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 128, 128, 0.3);
+        }
+
+        #expand-btn {
+            right: 80px; /* Position it to the left of the scroll-to-top button */
+        }
+
+        #expand-btn.active {
+            transform: rotate(45deg);
+        }
+    </style>
+</head>
+<body class="bg-white text-black min-h-screen flex flex-col items-center p-4">
+
+    <header class="w-full max-w-5xl my-4">
+        <nav class="bg-gray-200 p-4 rounded-xl shadow-lg flex justify-between items-center">
+            <a href="#" class="flex items-center space-x-2">
+                <img src="NXHNexus.png" alt="NXH Nexus Logo" class="h-10 w-10 animate-[pulse_2s_infinite]">
+                <span class="text-3xl font-bold text-accent-color">NXH Nexus</span>
+            </a>
+            <ul class="flex space-x-6">
+                <li><a href="#" class="nav-link text-lg text-gray-600 hover:text-black transition-colors duration-300" data-page="home">Home</a></li>
+                <li><a href="#" class="nav-link text-lg text-gray-600 hover:text-black transition-colors duration-300" data-page="apps">Apps</a></li>
+                <li><a href="#" class="nav-link text-lg text-gray-600 hover:text-black transition-colors duration-300" data-page="platforms">Platforms</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="w-full max-w-5xl mt-8 flex-grow">
+        
+        <section id="home-section" class="content-section animate-fadeIn">
+            <div class="text-center p-8 bg-gray-100 rounded-xl shadow-lg">
+                <h2 class="text-4xl font-extrabold text-accent-color mb-4">Welcome to the NXH Nexus</h2>
+                <p class="text-lg text-gray-700">Your central hub for all NXH apps and platforms. Enter the nexus of innovation.</p>
+            </div>
+        </section>
+
+        <section id="sub-brand-list-section" class="mt-8 hidden content-section animate-fadeIn">
+            <h2 id="sub-brand-list-title" class="text-4xl font-extrabold text-center text-accent-color mb-8"></h2>
+            <div id="sub-brand-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                </div>
+        </section>
+
+        <section id="main-content-section" class="mt-8 hidden content-section animate-fadeIn">
+            <div id="content-container">
+                <iframe id="main-iframe" frameborder="0"></iframe>
+            </div>
+            <div id="description-area" class="mt-8 p-6 bg-gray-100 rounded-xl shadow-lg hidden animate-fadeIn">
+                <h3 id="description-title" class="text-3xl font-bold text-accent-color mb-2"></h3>
+                <p id="description-text" class="text-gray-700 text-lg"></p>
+            </div>
+        </section>
+
+    </main>
+
+    <button id="scroll-to-top-btn" title="Go to top">
+        &#x25B2;
+    </button>
+    
+    <button id="expand-btn" title="Toggle full-screen">
+        &#x2922;
+    </button>
+
+    <footer class="w-full max-w-5xl mt-8 text-center text-gray-600 py-4">
+        <img src="NXHNexus.png" alt="NXH Nexus Logo" class="h-6 w-6 inline-block mr-2">
+        &copy; 2025 NXH Nexus. All rights reserved.
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const mainIframe = document.getElementById('main-iframe');
+            const homeSection = document.getElementById('home-section');
+            const mainContentSection = document.getElementById('main-content-section');
+            const subBrandListSection = document.getElementById('sub-brand-list-section');
+            const subBrandListTitle = document.getElementById('sub-brand-list-title');
+            const subBrandList = document.getElementById('sub-brand-list');
+            const contentContainer = document.getElementById('content-container');
+            const descriptionArea = document.getElementById('description-area');
+            const descriptionTitle = document.getElementById('description-title');
+            const descriptionText = document.getElementById('description-text');
+            const scrollButton = document.getElementById('scroll-to-top-btn');
+            const expandButton = document.getElementById('expand-btn');
+            
+            // Configuration for each sub-brand, nested under categories
+            const brands = {
+                home: {
+                    title: 'Home',
+                    description: 'Your central hub for all NXH apps and platforms. Enter the nexus of innovation.'
+                },
+                apps: {
+                    title: 'Apps',
+                    subBrands: {
+                        'projectquantos': {
+                            title: 'Project Quantos',
+                            url: 'https://xavieropurozor.github.io/projectquantos/',
+                            description: 'Project Quantos is a fun and interactive "Guess the Number" game.'
+                        },
+                        'projectxenon': {
+                            title: 'Project Xenon',
+                            url: 'https://xavieropurozor.github.io/projectxenon/',
+                            description: 'Project Xenon is a Tic-Tac-Toe game where you can play against an AI opponent.'
+                        },
+                        'cosmicpong': {
+                            title: 'Cosmic Pong',
+                            url: 'https://xavieropurozor.github.io/cosmicpong/',
+                            description: 'A space-themed version of the classic arcade game Pong.'
+                        },
+                        'xcalcly': {
+                            title: 'Xcalcly',
+                            url: 'https://xavieropurozor.github.io/xcalcly/',
+                            description: 'A modern scientific calculator capable of basic and advanced functions.'
+                        }
+                    }
+                },
+                platforms: {
+                    title: 'Platforms',
+                    subBrands: {
+                        'quantumx': {
+                            title: 'QuantumX',
+                            url: 'https://xavieropurozor.github.io/quantumx/',
+                            description: 'QuantumX is a cutting-edge cybersecurity platform providing next-generation protection against threats using quantum-safe encryption, AI-powered detection, and secure cloud infrastructure.'
+                        },
+                        'xize': {
+                            title: 'Xize',
+                            url: 'https://xavieropurozor.github.io/xize/',
+                            description: 'Xize is a platform that offers innovative solutions for businesses and individuals, focusing on modern web design, seamless user experiences, and robust functionality.'
+                        },
+                        'skillbridge': {
+                            title: 'SkillBridge',
+                            url: 'https://xavieropurozor.github.io/skillbridge/',
+                            description: 'SkillBridge is a platform dedicated to bridging the gap between learning and doing. It offers a practical archive of projects in web development, data analysis, and UI/UX design.'
+                        }
+                    }
+                }
+            };
+            
+            // This function changes the content of the iframe and description
+            const loadPage = (pageName, subBrandId = null) => {
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                });
+                
+                if (pageName === 'home') {
+                    homeSection.classList.remove('hidden');
+                    subBrandListSection.classList.add('hidden');
+                    mainContentSection.classList.add('hidden');
+                    document.querySelector(`[data-page="home"]`).classList.add('active');
+                    descriptionArea.classList.add('hidden');
+                    expandButton.style.display = 'none';
+                } else if (subBrandId) {
+                    // Load a specific sub-brand
+                    homeSection.classList.add('hidden');
+                    subBrandListSection.classList.add('hidden');
+                    mainContentSection.classList.remove('hidden');
+                    // Find the correct parent category link to make it active
+                    const parentCategory = Object.keys(brands).find(key => brands[key].subBrands && brands[key].subBrands[subBrandId]);
+                    if (parentCategory) {
+                        document.querySelector(`[data-page="${parentCategory}"]`).classList.add('active');
+                    }
+                    
+                    const brand = brands[pageName].subBrands[subBrandId];
+                    mainIframe.src = brand.url;
+                    
+                    descriptionTitle.textContent = brand.title;
+                    descriptionText.textContent = brand.description;
+                    descriptionArea.classList.remove('hidden');
+                    expandButton.style.display = 'flex'; // Show the expand button
+                } else {
+                    // Load a category page (e.g., 'Apps' or 'Platforms')
+                    homeSection.classList.add('hidden');
+                    mainContentSection.classList.add('hidden');
+                    subBrandListSection.classList.remove('hidden');
+                    document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
+                    
+                    subBrandListTitle.textContent = brands[pageName].title;
+                    subBrandList.innerHTML = ''; // Clear previous cards
+                    
+                    // Generate sub-brand cards
+                    if (Object.keys(brands[pageName].subBrands).length === 0) {
+                        subBrandList.innerHTML = `<p class="text-center text-gray-500 text-lg col-span-full">No items available in this category yet. Stay tuned!</p>`;
+                    } else {
+                        for (const id in brands[pageName].subBrands) {
+                            const subBrand = brands[pageName].subBrands[id];
+                            const card = document.createElement('div');
+                            card.className = 'sub-brand-card p-6 rounded-xl flex flex-col justify-center items-center text-center';
+                            card.setAttribute('data-category', pageName);
+                            card.setAttribute('data-sub-brand-id', id);
+                            card.innerHTML = `
+                                <h4 class="text-xl font-bold text-accent-color mb-2">${subBrand.title}</h4>
+                                <p class="text-gray-400 text-sm">${subBrand.description}</p>
+                            `;
+                            card.addEventListener('click', () => loadPage(pageName, id));
+                            subBrandList.appendChild(card);
+                        }
+                    }
+                    expandButton.style.display = 'none'; // Hide the expand button for category lists
+                }
+
+                // Add a small animation to the container
+                contentContainer.classList.remove('animate-fadeIn');
+                void contentContainer.offsetWidth;
+                contentContainer.classList.add('animate-fadeIn');
+            };
+
+            // Event listeners for navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', (event) => {
+                    event.preventDefault();
+                    const pageName = link.getAttribute('data-page');
+                    loadPage(pageName);
+                });
+            });
+
+            // Load the home page on initial page load
+            loadPage('home');
+
+            // --- Scroll to top button logic ---
+            window.onscroll = function() {
+                if (document.body.scrollTop > 200 || document.documentElement.scrollTop > 200) {
+                    scrollButton.style.display = "flex";
+                } else {
+                    scrollButton.style.display = "none";
+                }
+            };
+            
+            scrollButton.addEventListener('click', () => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+            // --- End scroll button logic ---
+            
+            // --- Expand iframe button logic ---
+            expandButton.addEventListener('click', () => {
+                contentContainer.classList.toggle('expanded');
+                expandButton.classList.toggle('active');
+            });
+            // --- End expand iframe button logic ---
+        });
+    </script>
+
+</body>
+</html>
