@@ -92,15 +92,41 @@
             border: 1px solid var(--accent-color);
             transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
             cursor: pointer;
+            position: relative; /* For button positioning */
+            overflow: hidden; /* To contain button */
         }
-
+        
         .sub-brand-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 5px 15px rgba(0, 128, 128, 0.2);
         }
+        
+        .sub-brand-card .card-content {
+            padding: 1.5rem;
+            text-align: center;
+        }
 
-        /* Styles for the scroll-to-top button and expand button */
-        #scroll-to-top-btn, #expand-btn {
+        .sub-brand-card .card-button {
+            position: absolute;
+            bottom: -50px; /* Initially hidden below */
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 0.5rem 1rem;
+            background-color: var(--accent-color);
+            color: var(--primary-bg);
+            border-radius: 0.5rem;
+            transition: bottom 0.3s ease-in-out;
+            text-align: center;
+            width: 80%;
+            white-space: nowrap;
+        }
+        
+        .sub-brand-card:hover .card-button {
+            bottom: 1rem; /* Slide up on hover */
+        }
+
+        /* Styles for the scroll-to-top button, expand button, and new view project button */
+        #scroll-to-top-btn, #expand-btn, #view-project-btn {
             position: fixed;
             bottom: 20px;
             right: 20px;
@@ -119,9 +145,10 @@
             line-height: 1;
             box-shadow: 0 4px 12px rgba(0, 128, 128, 0.2);
             transition: all 0.3s ease-in-out;
+            text-decoration: none; /* Remove underline for anchor tag */
         }
 
-        #scroll-to-top-btn:hover, #expand-btn:hover {
+        #scroll-to-top-btn:hover, #expand-btn:hover, #view-project-btn:hover {
             background-color: var(--nav-hover-color);
             transform: translateY(-5px);
             box-shadow: 0 6px 16px rgba(0, 128, 128, 0.3);
@@ -133,6 +160,27 @@
 
         #expand-btn.active {
             transform: rotate(45deg);
+        }
+
+        #view-project-btn {
+            right: 140px; /* Position it to the left of the expand button */
+            width: auto;
+            border-radius: 9999px;
+            padding: 12px 24px;
+            font-size: 14px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+        
+        /* New styles for the static home page content */
+        #home-content {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            text-align: center;
+            padding: 2rem;
         }
     </style>
 </head>
@@ -154,30 +202,34 @@
 
     <main class="w-full max-w-5xl mt-8 flex-grow">
         
-        <section id="home-section" class="content-section animate-fadeIn">
-            <div class="text-center p-8 bg-gray-100 rounded-xl shadow-lg">
-                <h2 class="text-4xl font-extrabold text-accent-color mb-4">Welcome to the NXH Nexus</h2>
-                <p class="text-lg text-gray-700">Your central hub for all NXH apps and platforms. Enter the nexus of innovation.</p>
-            </div>
-        </section>
-
+        <!-- The sub-brand list section is now the only section that toggles visibility -->
         <section id="sub-brand-list-section" class="mt-8 hidden content-section animate-fadeIn">
             <h2 id="sub-brand-list-title" class="text-4xl font-extrabold text-center text-accent-color mb-8"></h2>
             <div id="sub-brand-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                </div>
+            </div>
         </section>
 
+        <!-- The main content section with the iframe is now always visible on non-list pages -->
         <section id="main-content-section" class="mt-8 hidden content-section animate-fadeIn">
             <div id="content-container">
                 <iframe id="main-iframe" frameborder="0"></iframe>
             </div>
-            <div id="description-area" class="mt-8 p-6 bg-gray-100 rounded-xl shadow-lg hidden animate-fadeIn">
-                <h3 id="description-title" class="text-3xl font-bold text-accent-color mb-2"></h3>
-                <p id="description-text" class="text-gray-700 text-lg"></p>
+        </section>
+
+        <!-- New static content section for the home page -->
+        <section id="static-content-section" class="mt-8 content-section animate-fadeIn">
+            <div id="home-content" class="w-full h-80vh p-8 bg-gray-200 rounded-xl shadow-lg border-2 border-accent-color">
+                <h2 class="text-5xl font-extrabold text-accent-color mb-4">Welcome to NXH Nexus</h2>
+                <p class="text-xl text-gray-700">Explore a universe of innovation, where ideas take flight and every project is a new frontier.</p>
+                <img src="NXHNexus.png" alt="NXH Nexus Logo" class="h-40 w-40 mt-8 animate-[pulse_2s_infinite]">
             </div>
         </section>
 
     </main>
+
+    <a href="#" id="view-project-btn" target="_blank" class="px-6 py-3 rounded-full font-bold text-sm bg-accent-color text-primary-bg shadow-lg transition-transform duration-300 hidden">
+        View Project
+    </a>
 
     <button id="scroll-to-top-btn" title="Go to top">
         &#x25B2;
@@ -196,27 +248,31 @@
         document.addEventListener('DOMContentLoaded', () => {
             const navLinks = document.querySelectorAll('.nav-link');
             const mainIframe = document.getElementById('main-iframe');
-            const homeSection = document.getElementById('home-section');
             const mainContentSection = document.getElementById('main-content-section');
             const subBrandListSection = document.getElementById('sub-brand-list-section');
             const subBrandListTitle = document.getElementById('sub-brand-list-title');
             const subBrandList = document.getElementById('sub-brand-list');
+            const staticContentSection = document.getElementById('static-content-section');
             const contentContainer = document.getElementById('content-container');
-            const descriptionArea = document.getElementById('description-area');
-            const descriptionTitle = document.getElementById('description-title');
-            const descriptionText = document.getElementById('description-text');
             const scrollButton = document.getElementById('scroll-to-top-btn');
             const expandButton = document.getElementById('expand-btn');
+            const viewProjectButton = document.getElementById('view-project-btn');
             
             // Configuration for each sub-brand, nested under categories
             const brands = {
                 home: {
-                    title: 'Home',
-                    description: 'Your central hub for all NXH apps and platforms. Enter the nexus of innovation.'
+                    title: 'Welcome to NXH Nexus',
+                    url: null, // No URL for the static home page
+                    description: 'Explore a universe of innovation, where ideas take flight and every project is a new frontier.'
                 },
                 apps: {
                     title: 'Apps',
                     subBrands: {
+                        'projectaether': {
+                            title: 'Aether',
+                            url: 'https://xavieropurozor.github.io/aether',
+                            description: 'Aether creative writing and coding assistant powered by a large language model.'
+                        },
                         'projectquantos': {
                             title: 'Project Quantos',
                             url: 'https://xavieropurozor.github.io/projectquantos/',
@@ -230,18 +286,23 @@
                         'cosmicpong': {
                             title: 'Cosmic Pong',
                             url: 'https://xavieropurozor.github.io/cosmicpong/',
-                            description: 'A space-themed version of the classic arcade game Pong.'
+                            description: 'Cosmic Pong space-themed version of the classic arcade game Pong.'
                         },
                         'xcalcly': {
                             title: 'Xcalcly',
                             url: 'https://xavieropurozor.github.io/xcalcly/',
-                            description: 'A modern scientific calculator capable of basic and advanced functions.'
+                            description: 'Xcalcly modern scientific calculator capable of basic and advanced functions.'
                         }
                     }
                 },
                 platforms: {
                     title: 'Platforms',
                     subBrands: {
+                        'nxhtech': {
+                            title: 'NXH Tech Company',
+                            url: 'https://xavieropurozor.github.io/Nexh-TechCompany/',
+                            description: 'The official website for NXH Tech Company, showcasing our mission and services.'
+                        },
                         'quantumx': {
                             title: 'QuantumX',
                             url: 'https://xavieropurozor.github.io/quantumx/',
@@ -250,12 +311,17 @@
                         'xize': {
                             title: 'Xize',
                             url: 'https://xavieropurozor.github.io/xize/',
-                            description: 'Xize is a platform that offers innovative solutions for businesses and individuals, focusing on modern web design, seamless user experiences, and robust functionality.'
+                            description: 'Xize is the ultimate task management platform for businesses, teams, and professionals. Its purpose is to streamline workflow and amplify productivity.'
                         },
                         'skillbridge': {
                             title: 'SkillBridge',
                             url: 'https://xavieropurozor.github.io/skillbridge/',
                             description: 'SkillBridge is a platform dedicated to bridging the gap between learning and doing. It offers a practical archive of projects in web development, data analysis, and UI/UX design.'
+                        },
+                        'developer-bio': {
+                            title: "Developer's Bio",
+                            url: 'https://xavieropurozor.github.io/Xavier-Tech-Hub/index.html',
+                            description: 'A brief bio of the developer, showcasing personal projects and contributions.'
                         }
                     }
                 }
@@ -267,36 +333,32 @@
                     link.classList.remove('active');
                 });
                 
-                if (pageName === 'home') {
-                    homeSection.classList.remove('hidden');
-                    subBrandListSection.classList.add('hidden');
-                    mainContentSection.classList.add('hidden');
-                    document.querySelector(`[data-page="home"]`).classList.add('active');
-                    descriptionArea.classList.add('hidden');
-                    expandButton.style.display = 'none';
-                } else if (subBrandId) {
+                if (subBrandId) {
                     // Load a specific sub-brand
-                    homeSection.classList.add('hidden');
-                    subBrandListSection.classList.add('hidden');
                     mainContentSection.classList.remove('hidden');
-                    // Find the correct parent category link to make it active
-                    const parentCategory = Object.keys(brands).find(key => brands[key].subBrands && brands[key].subBrands[subBrandId]);
-                    if (parentCategory) {
-                        document.querySelector(`[data-page="${parentCategory}"]`).classList.add('active');
-                    }
+                    subBrandListSection.classList.add('hidden');
+                    staticContentSection.classList.add('hidden');
                     
                     const brand = brands[pageName].subBrands[subBrandId];
                     mainIframe.src = brand.url;
                     
-                    descriptionTitle.textContent = brand.title;
-                    descriptionText.textContent = brand.description;
-                    descriptionArea.classList.remove('hidden');
+                    document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
                     expandButton.style.display = 'flex'; // Show the expand button
+                    viewProjectButton.style.display = 'flex'; // Show the new button
+                    viewProjectButton.href = brand.url; // Set the button's URL
+                } else if (pageName === 'home') {
+                    // Load the static home page
+                    mainContentSection.classList.add('hidden');
+                    subBrandListSection.classList.add('hidden');
+                    staticContentSection.classList.remove('hidden');
+                    document.querySelector(`[data-page="home"]`).classList.add('active');
+                    expandButton.style.display = 'none'; // Hide the expand button for the static page
+                    viewProjectButton.style.display = 'none'; // Hide the view project button for the home page
                 } else {
                     // Load a category page (e.g., 'Apps' or 'Platforms')
-                    homeSection.classList.add('hidden');
                     mainContentSection.classList.add('hidden');
                     subBrandListSection.classList.remove('hidden');
+                    staticContentSection.classList.add('hidden');
                     document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
                     
                     subBrandListTitle.textContent = brands[pageName].title;
@@ -309,24 +371,41 @@
                         for (const id in brands[pageName].subBrands) {
                             const subBrand = brands[pageName].subBrands[id];
                             const card = document.createElement('div');
-                            card.className = 'sub-brand-card p-6 rounded-xl flex flex-col justify-center items-center text-center';
-                            card.setAttribute('data-category', pageName);
-                            card.setAttribute('data-sub-brand-id', id);
+                            card.className = 'sub-brand-card flex flex-col justify-between';
                             card.innerHTML = `
-                                <h4 class="text-xl font-bold text-accent-color mb-2">${subBrand.title}</h4>
-                                <p class="text-gray-400 text-sm">${subBrand.description}</p>
+                                <div class="card-content">
+                                    <h4 class="text-xl font-bold text-accent-color mb-2">${subBrand.title}</h4>
+                                    <p class="text-gray-400 text-sm">${subBrand.description}</p>
+                                </div>
+                                <a href="${subBrand.url}" target="_blank" class="card-button text-sm font-bold opacity-0 transition-opacity duration-300">View Project</a>
                             `;
-                            card.addEventListener('click', () => loadPage(pageName, id));
+                            card.addEventListener('mouseenter', () => {
+                                card.querySelector('.card-button').classList.remove('opacity-0');
+                                card.querySelector('.card-button').classList.add('opacity-100');
+                            });
+                            card.addEventListener('mouseleave', () => {
+                                card.querySelector('.card-button').classList.remove('opacity-100');
+                                card.querySelector('.card-button').classList.add('opacity-0');
+                            });
+
+                            card.addEventListener('click', () => {
+                                event.preventDefault();
+                                loadPage(pageName, id);
+                            });
+
                             subBrandList.appendChild(card);
                         }
                     }
                     expandButton.style.display = 'none'; // Hide the expand button for category lists
+                    viewProjectButton.style.display = 'none'; // Hide the new button on category list pages
                 }
 
                 // Add a small animation to the container
-                contentContainer.classList.remove('animate-fadeIn');
-                void contentContainer.offsetWidth;
-                contentContainer.classList.add('animate-fadeIn');
+                mainContentSection.classList.remove('animate-fadeIn');
+                staticContentSection.classList.remove('animate-fadeIn');
+                void staticContentSection.offsetWidth;
+                mainContentSection.classList.add('animate-fadeIn');
+                staticContentSection.classList.add('animate-fadeIn');
             };
 
             // Event listeners for navigation links
