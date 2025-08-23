@@ -202,21 +202,18 @@
 
     <main class="w-full max-w-5xl mt-8 flex-grow">
         
-        <!-- The sub-brand list section is now the only section that toggles visibility -->
         <section id="sub-brand-list-section" class="mt-8 hidden content-section animate-fadeIn">
             <h2 id="sub-brand-list-title" class="text-4xl font-extrabold text-center text-accent-color mb-8"></h2>
             <div id="sub-brand-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             </div>
         </section>
 
-        <!-- The main content section with the iframe is now always visible on non-list pages -->
         <section id="main-content-section" class="mt-8 hidden content-section animate-fadeIn">
             <div id="content-container">
                 <iframe id="main-iframe" frameborder="0"></iframe>
             </div>
         </section>
 
-        <!-- New static content section for the home page -->
         <section id="static-content-section" class="mt-8 content-section animate-fadeIn">
             <div id="home-content" class="w-full h-80vh p-8 bg-gray-200 rounded-xl shadow-lg border-2 border-accent-color">
                 <h2 class="text-5xl font-extrabold text-accent-color mb-4">Welcome to NXH Nexus</h2>
@@ -268,6 +265,11 @@
                 apps: {
                     title: 'Apps',
                     subBrands: {
+                        'vertex': {
+                            title: 'Vertex',
+                            url: 'https://xavieropurozor.github.io/vertex/',
+                            description: 'Vertex is a code snippet tool for developers, helping to save, organize, and share code easily with syntax highlighting and search functionality.'
+                        },
                         'projectaether': {
                             title: 'Aether',
                             url: 'https://xavieropurozor.github.io/aether',
@@ -388,7 +390,7 @@
                                 card.querySelector('.card-button').classList.add('opacity-0');
                             });
 
-                            card.addEventListener('click', () => {
+                            card.addEventListener('click', (event) => {
                                 event.preventDefault();
                                 loadPage(pageName, id);
                             });
@@ -445,4 +447,3 @@
 
 </body>
 </html>
-
